@@ -1,0 +1,147 @@
+<main class="min-h-[120vh] bg-gray-200">
+  <div
+    class="fixed px-2 py-1 right-2 w-[22%] bottom-0 rounded-t bg-white flex justify-between items-center cursor-pointer"
+    *ngIf="!openChat"
+    (click)="openChat = true"
+  >
+    <div class="flex gap-2 items-center">
+      <div class="relative">
+        <app-bot> </app-bot>
+        <div
+          class="p-[1px] flex justify-center absolute top-[70%] left-[75%] rounded-full bg-white"
+        >
+          <div class="h-2 w-2 bg-teal-600 rounded-full"></div>
+        </div>
+      </div>
+
+      <p class="text-violet-600">ESG chatbot</p>
+    </div>
+    <div
+      class="flex p-1 justify-center items-center rounded-full hover:bg-violet-200"
+      (click)="openChat = true"
+    >
+      <span class="material-symbols-outlined open"> keyboard_arrow_up </span>
+    </div>
+  </div>
+
+  <div
+    class="fixed right-2 bottom-0 rounded-t bg-white flex flex-col"
+    [ngClass]="bigChat ? 'w-[35%] h-[75%]' : 'w-[25%] h-[50%]'"
+    *ngIf="openChat"
+  >
+    <div
+      class="sticky left-0 top-0 w-full rounded-t bg-white flex justify-between items-center cursor-pointer shadow shadow-gray-300"
+    >
+      <div class="flex gap-2 items-center pl-2 py-2">
+        <div class="relative">
+          <img
+            src="../../../../assets/AI_Avatar.png"
+            class="rounded-full w-8 h-8"
+          />
+          <div
+            class="p-[1px] flex justify-center absolute top-[70%] left-[75%] rounded-full bg-white"
+          >
+            <div class="h-[6px] w-[6px] bg-teal-600 rounded-full p"></div>
+          </div>
+        </div>
+
+        <p class="text-violet-600 text-sm">ESG chatbot</p>
+      </div>
+      <div class="flex gap-2 items-center mr-2">
+        <div
+          class="flex p-1 justify-center items-center rounded-full hover:bg-violet-200"
+          (click)="bigChat = true"
+          *ngIf="!bigChat"
+        >
+          <span class="material-symbols-outlined open"> expand_content </span>
+        </div>
+        <div
+          class="flex p-1 justify-center items-center rounded-full hover:bg-violet-200"
+          (click)="bigChat = false"
+          *ngIf="bigChat"
+        >
+          <span class="material-symbols-outlined open"> collapse_content </span>
+        </div>
+        <div
+          class="flex p-1 justify-center items-center rounded-full hover:bg-violet-200"
+        >
+          <span
+            class="material-symbols-outlined open"
+            (click)="openChat = false"
+          >
+            close
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 flex-1 h-full overflow-hidden">
+      <div class="h-full overflow-y-auto" #chatUI>
+        <div class="pb-4 flex flex-col gap-4">
+          <div *ngFor="let message of messages" class="pl-4 text-sm">
+            <div class="flex gap-4 w-[80%]">
+              <img
+                class="self-start w-6 h-6"
+                [src]="
+                  message.role === 'ai'
+                    ? '../../../../assets/AI_Avatar.png'
+                    : '../../../../assets/user.png'
+                "
+              />
+              <div class="w-full rounded-xl shadow-sm shadow-gray-300 p-2">
+                {{ message.content }}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div
+              class="flex gap-4 w-[80%] pl-4"
+              [ngClass]="thinking ? '' : 'opacity-0'"
+            >
+              <img
+                class="self-start w-6 h-6"
+                src="../../../../assets/AI_Avatar.png"
+              />
+              <div
+                class="w-40 h-10 rounded-xl shadow-sm shadow-gray-300 p-2 relative overflow-hidden"
+              >
+                <ngx-spinner
+                  bdColor="rgba(255,255,255,0.1)"
+                  [fullScreen]="false"
+                  type="ball-pulse-sync"
+                  size="small"
+                  color="#778ae7f0"
+                  [showSpinner]="thinking"
+                ></ngx-spinner>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form class="px-4 pb-4 flex gap-2 bg-white" (submit)="sendChat()">
+      <div class="w-[90%] flex items-center">
+        <div
+          class="rounded-2xl w-full overflow-hidden border-[1px] border-gray-400 flex-grow flex flex-col textarea-container"
+        >
+          <textarea
+            #input
+            (keyup.enter)="sendChat()"
+            [(ngModel)]="question"
+            name="input"
+            id="input"
+            (input)="onChange()"
+            rows="1"
+            placeholder="Message ESG chatbot..."
+            class="resize-none border-none w-full p-2 min-h-10 max-h-28 h-auto focus:outline-none text-sm"
+          ></textarea>
+        </div>
+      </div>
+      <button
+        class="p-1 rounded self-center border-[1px] border-gray-400 flex justify-center items-center"
+      >
+        <span class="material-symbols-outlined send"> send </span>
+      </button>
+    </form>
+  </div>
+</main>

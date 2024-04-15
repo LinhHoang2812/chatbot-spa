@@ -1,0 +1,97 @@
+<main
+  class="flex justify-center h-screen bg-gradient-to-b from-teal-50 to-white bg-opacity-5"
+>
+  <div class="flex flex-col w-full h-full max-w-[1200px] bg-white pl-10">
+    <div class="relative py-10 top-0 z-100 bg-white flex justify-center">
+      <div
+        class="flex gap-2 items-center px-4 py-3 shadow-2xl shadow-gray-300 rounded-xl"
+      >
+        <img src="../../../../assets/AI_Avatar.png" class="opacity-60" />
+        <p
+          class="sticky bg-gradient-to-r from-violet-600 to-violet-300 text-transparent font-semibold bg-clip-text header"
+        >
+          ESG chatbot
+        </p>
+      </div>
+    </div>
+    <div class="flex-1 relative overflow-hidden">
+      <div class="h-full overflow-y-auto chat pr-10" #chatUI>
+        <div class="pb-10 flex flex-col gap-8">
+          <div *ngFor="let message of messages">
+            <div class="flex gap-4 w-[80%]">
+              <img
+                class="self-start"
+                [src]="
+                  message.role === 'ai'
+                    ? '../../../../assets/AI_Avatar.png'
+                    : '../../../../assets/user.png'
+                "
+              />
+              <div class="w-full rounded-xl shadow-sm shadow-gray-300 p-2">
+                {{ message.content }}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div
+              class="flex gap-4 w-[80%]"
+              [ngClass]="thinking ? '' : 'opacity-0'"
+            >
+              <img class="self-start" src="../../../../assets/AI_Avatar.png" />
+              <div
+                class="w-40 h-10 rounded-xl shadow-sm shadow-gray-300 p-2 relative overflow-hidden"
+              >
+                <ngx-spinner
+                  bdColor="rgba(255,255,255,0.1)"
+                  [fullScreen]="false"
+                  type="ball-pulse-sync"
+                  size="medium"
+                  color="#778ae7f0"
+                  [showSpinner]="thinking"
+                ></ngx-spinner>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form
+      class="pb-10 md:pl-12 md:pr-20 pl-0 pr-10 flex gap-4 z-100 bg-white"
+      (submit)="sendChat()"
+    >
+      <div class="w-[81%] flex items-center">
+        <div
+          class="rounded-2xl w-full overflow-hidden border-[1px] border-gray-300 flex-grow flex flex-col textarea-container"
+        >
+          <textarea
+            #input
+            (keyup.enter)="sendChat()"
+            [(ngModel)]="question"
+            name="input"
+            id="input"
+            rows="1"
+            (input)="onChange()"
+            placeholder="Message ESG chatbot..."
+            class="resize-none border-none w-full px-6 py-4 min-h-14 max-h-40 h-auto focus:outline-none"
+          ></textarea>
+        </div>
+      </div>
+      <button
+        class="px-4 py-1 rounded-2xl self-center text-white bg-gradient-to-br from-violet-700 to-violet-300"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</main>
+
+<!-- bg-gradient-to-b from-sky-700 to-teal-400 bg-opacity-5 -->
+<!-- w-[calc(100%-5rem)] max-w-[calc(1200px-5rem)] -->
+<!-- fixed bottom-[5vh] w-[calc(100%-5rem)] max-w-[calc(1200px-5rem)]  -->
+<!-- w-[calc(100%-3rem)] -->
+<!-- <div
+          class="w-[103%] px-6 py-3 min-h-6 max-h-44 overflow-y-auto focus:outline-none"
+          [contentEditable]="true"
+          #user
+        ></div> -->

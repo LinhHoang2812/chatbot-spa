@@ -1,0 +1,56 @@
+<div
+  class="p-10 rounded shadow-lg border-[1px] border-gray-300 shadow-gray-300 flex justify-between items-center"
+>
+  <div class="px-4 rounded-3xl w-[60%] border-gray-400 bg-gray-100">
+    <form (submit)="onSearch()" class="flex items-center justify-between">
+      <input
+        [(ngModel)]="q"
+        name="q"
+        type="text"
+        placeholder="Search..."
+        class="py-3 border-none focus:outline-none bg-transparent w-full text-gray-600"
+        (input)="onChange()"
+      />
+      <button>
+        <span class="material-symbols-outlined search"> search </span>
+      </button>
+    </form>
+  </div>
+  <div class="flex gap-2 items-center">
+    <label
+      class="py-2 px-4 border-2 border-violet-600 rounded-3xl bg-violet-600 text-white font-semibold cursor-pointer"
+      for="doc"
+      matTooltip="Only documents with these extensions are accepted .xlsx,.docx,.pdf"
+    >
+      Upload doc
+    </label>
+    <label
+      class="py-2 px-2 border-2 rounded-3xl border-violet-600 text-violet-600 font-semibold cursor-pointer"
+      for="pdfWithImage"
+    >
+      PDF with image
+    </label>
+  </div>
+</div>
+
+<input
+  type="file"
+  id="doc"
+  class="hidden"
+  (change)="uploadDoc($event)"
+  accept=".xlsx,.docx,.pdf"
+/>
+<input
+  type="file"
+  id="pdfWithImage"
+  class="hidden"
+  (change)="uploadPdfWithImage($event)"
+  accept=".pdf"
+/>
+
+<div
+  class="h-screen w-screen absolute top-0 left-0 flex justify-center items-center bg-gray-50 bg-opacity-30"
+  *ngIf="loading"
+>
+  <mat-spinner [diameter]="100"></mat-spinner>
+</div>

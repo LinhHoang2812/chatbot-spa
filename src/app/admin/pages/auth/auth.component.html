@@ -1,0 +1,79 @@
+<main
+  class="h-screen flex justify-center items-center bg-gradient-to-r from-sky-800 to-teal-500"
+>
+  <form
+    class="py-10 px-12 rounded-3xl bg-gradient-to-b from-gray-50 to-gray-200 w-2/5"
+    [formGroup]="form"
+    #ngForm="ngForm"
+    (submit)="onSave()"
+  >
+    <h5 class="text-2xl text-center pb-10 text-gray-500">Log in</h5>
+    <p class="pb-5 text-sm text-red-500 capitalize" *ngIf="message">
+      {{ message }}
+    </p>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-gray-700">Email</label>
+        <div class="p-2 rounded-sm focus:outline-none bg-white text-gray-500">
+          <input
+            name="email"
+            formControlName="email"
+            type="email"
+            class="w-full focus:outline-none"
+          />
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="ngForm.submitted && !form.get('email').valid"
+        >
+          Please provide a valid email
+        </p>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-semibold text-gray-700">Password</label>
+        <div
+          class="flex gap-1 justify-between items-center p-2 rounded-sm focus:outline-none bg-white text-gray-500"
+        >
+          <input
+            formControlName="password"
+            name="password"
+            [type]="passwordVisible ? 'text' : 'password'"
+            class="w-[90%] focus:outline-none"
+          />
+          <span
+            class="material-symbols-outlined cursor-pointer"
+            *ngIf="passwordVisible"
+            (click)="passwordVisible = !passwordVisible"
+          >
+            visibility
+          </span>
+          <span
+            class="material-symbols-outlined cursor-pointer"
+            *ngIf="!passwordVisible"
+            (click)="passwordVisible = !passwordVisible"
+          >
+            visibility_off
+          </span>
+        </div>
+
+        <p
+          class="text-sm text-red-500"
+          *ngIf="ngForm.submitted && !form.get('password').valid"
+        >
+          Password can not be blank
+        </p>
+      </div>
+      <button
+        class="self-start flex flex-col items-center py-1 px-4 rounded-3xl bg-violet-600 text-white"
+      >
+        <span *ngIf="!loading">Log in</span>
+        <mat-spinner
+          [diameter]="20"
+          color="accent"
+          *ngIf="loading"
+        ></mat-spinner>
+      </button>
+    </div>
+  </form>
+</main>
