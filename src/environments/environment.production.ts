@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBase: 'http://localhost:8000/',
+  apiBase: 'https://esg-chatbot-api.onrender.com/',
 };
