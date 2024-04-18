@@ -1,6 +1,12 @@
 .logout {
   font-size: 28px;
   font-weight: 700;
-  // color: #0d9488;
-  color: #7c3aed;
+  color: #0d9488;
+  //color: #7c3aed;
+}
+.header {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
 }

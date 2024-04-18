@@ -2,9 +2,9 @@
   class="py-4 px-20 border-b-[1px] border-gray-200 flex justify-between items-center"
 >
   <div class="flex gap-2 items-center cursor-pointer">
-    <app-bot></app-bot>
+    <!-- <app-bot></app-bot> -->
     <h5
-      class="text-xl bg-gradient-to-r from-violet-700 to-violet-500 text-transparent font-bold bg-clip-text"
+      class="text-xl bg-gradient-to-r from-sky-700 to-green-400 text-transparent font-bold bg-clip-text header"
     >
       ESG Chatbot
     </h5>
@@ -57,7 +57,7 @@
     <ng-container matColumnDef="filename">
       <th mat-header-cell *matHeaderCellDef>Filename</th>
       <td mat-cell *matCellDef="let element">
-        <a [href]="element.filepath" class="hover:text-violet-600">{{
+        <a [href]="element.filepath" class="hover:text-teal-600">{{
           element.filename
         }}</a>
       </td>
