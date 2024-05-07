@@ -75,4 +75,11 @@ export class DocumentsService {
       headers: this.headers,
     });
   }
+
+  downloadDoc(url: string) {
+    return this.http.get(url, {
+      responseType: 'blob',
+      // headers: { Accept: 'application/pdf' },
+    });
+  }
 }

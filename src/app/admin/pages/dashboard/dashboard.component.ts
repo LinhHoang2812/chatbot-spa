@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { DocumentsService } from '../../services/documents.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-dashboard',
@@ -88,5 +89,11 @@ export class DashboardComponent {
     localStorage.removeItem('token');
     this.authService.saveToken(null);
     this.router.navigateByUrl('/admin/auth');
+  }
+
+  download(url: string, filename: string) {
+    this.documentService.downloadDoc(url).subscribe((blob) => {
+      saveAs(blob, filename);
+    });
   }
 }

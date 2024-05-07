@@ -12,7 +12,7 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$chatbot_ng-primary: mat.define-palette(mat.$deep-purple-palette, 500);
+$chatbot_ng-primary: mat.define-palette(mat.$teal-palette, 600);
 $chatbot_ng-accent: mat.define-palette(mat.$gray-palette, 50);
 
 // The warn palette is optional (defaults to red).
@@ -49,4 +49,14 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// input:-webkit-autofill,
+// input:-webkit-autofill:hover,
+// input:-webkit-autofill:focus,
+// input:-webkit-autofill:active {
+//   transition: background-color 5000s ease-in-out 0s;
+// }
+input:-webkit-autofill {
+  -webkit-background-clip: text;
 }
