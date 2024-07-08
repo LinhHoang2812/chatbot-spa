@@ -25,9 +25,10 @@
 // main {
 //   background-image: linear-gradient(to bottom, #5470ff76, #73a08f7c);
 // }
-main {
-  background-image: linear-gradient(to bottom, #0b4e82ba, #80c346c5);
-}
+
+// main {
+//   background-image: linear-gradient(to bottom, #0b4e82ba, #80c346c5);
+// }
 
 textarea::-webkit-scrollbar {
   width: 10px;
@@ -65,3 +66,43 @@ textarea::-webkit-scrollbar-thumb {
   background-clip: text;
   text-fill-color: transparent;
 }
+.send{
+  color: white
+}
+
+.icon{
+  color:rgb(115, 115, 115)
+}
+.check{
+  font-size: 16px;
+  fill:black
+}
+
+.menu::-webkit-scrollbar{
+  display: none;
+  // border: none;
+  // background-color: transparent;
+} /* webkit browsers(safari, chrome) */
+// ::ng-deep p strong{
+//   font-size: 16px;
+// }
+// ::ng-deep h1,h2,h3,h4,h5,h6{
+//   font-size: 16px !important;
+//   font-weight: bold !important;
+// }
+// ::ng-deep p{
+//   margin: 5px 0;
+// }
+// ::ng-deep ol{
+//   margin-bottom: 10px;
+  
+// }
+// ::ng-deep ul{
+//   list-style: decimal;
+//   margin-bottom: 10px;
+//   padding-left: 40px;
+// }
+// ::ng-deep li{
+//   padding-bottom: 5px;
+// }
+

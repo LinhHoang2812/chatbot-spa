@@ -1,4 +1,4 @@
-<div
+<!-- <div
   class="p-10 rounded shadow-lg border-[1px] border-gray-300 shadow-gray-300 flex justify-between items-center"
 >
   <div class="px-4 rounded-3xl w-[60%] border-gray-400 bg-gray-100">
@@ -26,10 +26,10 @@
     </label>
     <label
       class="p-[2px] rounded-3xl font-semibold cursor-pointer bg-teal-600"
-      for="pdfWithImage"
+      
     >
       <p class="py-[6px] px-[14px] rounded-3xl bg-white text-teal-600">
-        PDF with image
+        Add website 
       </p>
     </label>
   </div>
@@ -41,14 +41,74 @@
   class="hidden"
   (change)="uploadDoc($event)"
   accept=".xlsx,.docx,.pdf"
-/>
-<input
+/> -->
+<!-- <input
   type="file"
   id="pdfWithImage"
   class="hidden"
   (change)="uploadPdfWithImage($event)"
   accept=".pdf"
-/>
+/> -->
+
+<div
+  class="p-10 rounded shadow-lg border-[1px] border-gray-300 shadow-gray-300 flex justify-between items-center"
+>
+<form  class="w-full" [formGroup]="form" #ngForm="ngForm" >
+  <div class="grid grid-cols-3 gap-8">
+    <div >
+      <p>Title</p>
+      <div class="p-2 rounded-sm border-[0.5px] border-gray-300 w-full ">
+        <input type="text" class="w-full border-none focus:outline-none" formControlName="title">
+      </div>
+      <p class="text-red-700 text-xs" *ngIf="submitted && !this.form.get('title').valid">Please insert title</p>
+    </div>
+    
+    <div>
+      <p>Topic</p>
+      <div class="p-2 rounded-sm border-[0.5px] border-gray-300 w-full ">
+        <select id="topic" name="topic" class="focus:outline-none w-full" formControlName="topic">
+          <option [value]="item" *ngFor="let item of reportList">{{item}}</option>
+         
+        </select>
+        
+      </div>
+      <p class="text-red-700 text-xs" *ngIf="submitted && !this.form.get('topic').valid">Please choose topic</p>
+    </div>
+    <div >
+      <p>File</p>
+      <div class="flex gap-5 items-center">
+        <label for="doc" class="pt-3 cursor-pointer"><span class="material-symbols-outlined upload">
+          attach_file_add
+        </span></label>
+        <input
+          type="file"
+          id="doc"
+          class="hidden"
+          (change)="uploadDoc($event)"
+          accept=".xlsx,.docx,.pdf"
+          formControlName="file"
+        /> 
+        <p *ngIf="this.form.get('file').valid" class="flex-grow">{{this.form.get('file').value.name}}</p>
+      </div>
+      <p class="text-red-700 text-xs" *ngIf="submitted && !this.form.get('file').valid">Please attach a file</p>
+      
+      
+    </div>
+  </div>
+  
+
+  <button type="submit"  class="mt-8 px-5 py-2 rounded-3xl font-semibold cursor-pointer bg-teal-600 text-white"
+  (click)="onSave()" 
+  >
+    Upload
+  </button>
+
+
+</form>
+
+</div>
+
+
 
 <div
   class="h-screen w-screen absolute top-0 left-0 flex justify-center items-center bg-gray-50 bg-opacity-30"
@@ -56,3 +116,6 @@
 >
   <mat-spinner [diameter]="100"></mat-spinner>
 </div>
+
+
+

@@ -15,6 +15,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BotComponent } from './chat/components/bot/bot.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ChatUISmallComponent } from './chat/pages/chat-uismall/chat-uismall.component';
+import {CdkMenuModule} from '@angular/cdk/menu';
+import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +37,14 @@ import { ChatUISmallComponent } from './chat/pages/chat-uismall/chat-uismall.com
     MatProgressSpinnerModule,
     MatTableModule,
     NgxSpinnerModule,
+    CdkMenuModule,
+    MarkdownModule.forRoot({markedOptions: {
+      provide: MarkedOptions,
+      useValue: {
+        gfm: true,
+        breaks: true,
+        smartList: true
+      }}})
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [],

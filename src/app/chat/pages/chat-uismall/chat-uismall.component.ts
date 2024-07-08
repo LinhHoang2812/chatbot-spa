@@ -51,15 +51,15 @@ export class ChatUISmallComponent {
       content: this.question,
     });
 
-    this.chatService
-      .get_response(this.question, this.messages)
-      .subscribe((res: { response: string }) => {
-        this.messages.push({
-          role: 'ai',
-          content: res.response,
-        });
-        this.thinking = false;
-      });
+    // this.chatService
+    //   .get_response(this.question, this.messages)
+    //   .subscribe((res: { response: string }) => {
+    //     this.messages.push({
+    //       role: 'ai',
+    //       content: res.response,
+    //     });
+    //     this.thinking = false;
+    //   });
     this.question = null;
     this.input.nativeElement.style.height = 'auto';
   }

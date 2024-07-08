@@ -1,35 +1,44 @@
-<main
-  class="flex justify-center h-screen bg-gradient-to-b from-teal-50 to-white bg-opacity-5"
+<div
+  class="flex justify-center h-screen "
 >
-  <div class="flex flex-col w-full h-full max-w-[1200px] bg-white pl-10">
-    <div class="relative py-10 top-0 z-100 bg-white flex justify-center">
-      <div
-        class="flex gap-2 items-center px-4 py-3 shadow-2xl shadow-gray-300 rounded-xl"
+  <div class="flex flex-col w-full h-full max-w-[1000px] bg-white pl-10">
+    <div class="relative pt-2 pb-10 top-0 z-100 bg-white flex gap-4">
+      <div class="px-2 py-1 rounded-lg flex items-center justify-center hover:bg-gray-100 cursor-pointer"
+      (click)="messages = []"
       >
-        <img src="../../../../assets/AI_Avatar.png" class="opacity-60" />
-        <p
-          class="sticky bg-gradient-to-r bg-gradient-to-r from-sky-600 to-green-300 text-transparent font-semibold bg-clip-text header"
-        >
-          ESG chatbot
-        </p>
+        <span class="material-symbols-outlined icon">
+          edit_square
+          </span>
       </div>
+      <button [cdkMenuTriggerFor]="menu" class="px-2 py-1 rounded-lg flex items-center gap-1 justify-center hover:bg-gray-100 cursor-pointer">
+        <span class="text-xl text-gray-600 leading-relaxed">{{chosenTopic}}</span>
+        <span class="material-symbols-outlined icon">
+          keyboard_arrow_down
+          </span>
+      </button>
+      
     </div>
     <div class="flex-1 relative overflow-hidden">
-      <div class="h-full overflow-y-auto chat pr-10" #chatUI>
+      <div class="h-full overflow-y-auto chat pl-10 pr-20" #chatUI>
         <div class="pb-10 flex flex-col gap-8">
-          <div *ngFor="let message of messages">
-            <div class="flex gap-4 w-[80%]">
-              <img
-                class="self-start"
-                [src]="
-                  message.role === 'ai'
-                    ? '../../../../assets/AI_Avatar.png'
-                    : '../../../../assets/user.png'
-                "
+          <div *ngFor="let message of messages" [ngClass]="message.role !== 'ai'? 'self-end ':'' ">
+            <div class="flex gap-4 "  >
+              <img *ngIf="message.role === 'ai'" class="self-start"
+                src="../../../../assets/AI_Avatar.png"
+                
               />
-              <div class="w-full rounded-xl shadow-sm shadow-gray-300 p-2">
-                {{ message.content }}
-              </div>
+              <!-- <div [ngClass]="message.role === 'ai'? 'w-full':'px-4 py-2 max-w-[25rem] rounded-2xl bg-gray-200'" [innerHTML]="markdownService.parse(message.content)">
+               
+              </div> -->
+              <markdown
+              [ngClass]="message.role === 'ai'? 'w-full':'px-4 py-2 max-w-[25rem] rounded-2xl bg-gray-200'"
+              class="prose-ul:list-decimal prose-ul:my-2 prose-ul:pl-10 prose-li:pb-2 prose-p:my-1 prose-headings:text-lg prose-headings:font-semibold prose-headings:my-2 "
+              [data]="message.content"
+              [disableSanitizer]="true"
+              ngPreserveWhitespaces
+              >
+            </markdown>
+            
             </div>
           </div>
 
@@ -57,34 +66,61 @@
       </div>
     </div>
     <form
-      class="pb-10 md:pl-12 md:pr-20 pl-0 pr-10 flex gap-4 z-100 bg-white"
+      class="pb-10 md:pl-12 md:pr-20 pl-0 pr-10 flex gap-4 z-100 "
       (submit)="sendChat()"
     >
-      <div class="w-[81%] flex items-center">
+      <div class="w-full  flex items-center">
         <div
-          class="rounded-2xl w-full overflow-hidden border-[1px] border-gray-300 flex-grow flex flex-col textarea-container"
+          class="pr-2 bg-gray-100 rounded-3xl w-full overflow-hidden border-[1px] border-gray-300 flex-grow flex  textarea-container gap-5"
         >
           <textarea
             #input
-            (keyup.enter)="sendChat()"
+            (keyup.enter)="streamChat()"
             [(ngModel)]="question"
             name="input"
             id="input"
             rows="1"
             (input)="onChange()"
             placeholder="Message ESG chatbot..."
-            class="resize-none border-none w-full px-6 py-4 min-h-14 max-h-40 h-auto focus:outline-none"
+            class="resize-none border-none w-full px-6 py-4 min-h-14 max-h-40 h-auto focus:outline-none bg-gray-100"
           ></textarea>
+        <button type="submit"
+          class="w-9 h-9 self-center flex items-center justify-center rounded-full bg-gray-300 border-[1px] border-gray-300  "
+        >
+        <span class="material-symbols-outlined send">
+          arrow_upward
+          </span>
+        </button>
         </div>
+       
       </div>
-      <button
-        class="px-4 py-1 rounded-2xl self-center text-white bg-gradient-to-br bg-gradient-to-r from-sky-700 to-green-400"
-      >
-        Submit
-      </button>
+      
     </form>
   </div>
-</main>
+</div>
+
+
+<ng-template #menu>
+  <div class="menu p-3 shadow-md shadow-gray-200 min-w-[23rem] rounded-md border-[1px] border-gray-300 flex flex-col h-60 overflow-y-auto bg-white" cdkMenu
+  style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 20;"
+  >
+    <div
+        cdkMenuItemCheckbox
+        *ngFor="let item of reportList"
+        class="px-4 py-3 rounded-md text-left hover:bg-gray-100 flex gap-2 items-center justify-between cursor-pointer "
+        (click)="chosenTopic=item"
+        >
+        <span>
+          {{item}}
+        </span>
+        <span class="material-symbols-outlined check" *ngIf="item === chosenTopic">
+          check_circle
+          </span>
+
+     
+    </div>
+</div>
+</ng-template>
 
 <!-- bg-gradient-to-b from-sky-700 to-teal-400 bg-opacity-5 -->
 <!-- w-[calc(100%-5rem)] max-w-[calc(1200px-5rem)] -->
@@ -95,3 +131,21 @@
           [contentEditable]="true"
           #user
         ></div> -->
+
+
+<!-- class="self-start"
+        [src]="
+          message.role === 'ai'
+            ? '../../../../assets/AI_Avatar.png'
+            : '../../../../assets/user.png'
+        " -->
+<!-- <div
+        class="flex gap-2 items-center px-4 py-3 shadow-2xl shadow-gray-300 rounded-xl"
+      >
+        <img src="../../../../assets/AI_Avatar.png" class="opacity-60" />
+        <p
+          class="sticky bg-gradient-to-r bg-gradient-to-r from-sky-600 to-green-300 text-transparent font-semibold bg-clip-text header"
+        >
+          ESG chatbot
+        </p>
+      </div> -->
