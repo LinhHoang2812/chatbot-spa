@@ -56,7 +56,7 @@ export class ChatUIComponent {
           this.messages[this.messages.length-1].content +=   res
           // console.log(res);
           
-          console.log(this.markdownService.parse(this.messages[this.messages.length-1].content))
+          //console.log(this.markdownService.parse(this.messages[this.messages.length-1].content))
           
           
           
