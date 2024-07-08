@@ -27,13 +27,19 @@ export class ChatUIComponent {
   ngOnInit( ) {}
 
   ngAfterViewChecked() {
-    if (this.messages.length !== this.lastMessagesLength) {
-      this.chatUI.nativeElement.scrollTop =
+    // if (this.messages.length !== this.lastMessagesLength) {
+    //   this.chatUI.nativeElement.scrollTop =
+    //     this.chatUI.nativeElement.scrollHeight;
+    //   this.lastMessagesLength = this.messages.length;
+    // }
+    this.chatUI.nativeElement.scrollTop =
         this.chatUI.nativeElement.scrollHeight;
-      this.lastMessagesLength = this.messages.length;
-    }
-    // this.chatUI.nativeElement.scrollTop =
-    //   this.chatUI.nativeElement.scrollHeight;
+    // if (this.messages.length !== this.lastMessagesLength) {
+    //   this.chatUI.nativeElement.scrollTop =
+    //     this.chatUI.nativeElement.scrollHeight;
+    //   this.lastMessagesLength = this.messages.length;
+    // }
+    
   }
   streamChat(){
     this.thinking = true;
