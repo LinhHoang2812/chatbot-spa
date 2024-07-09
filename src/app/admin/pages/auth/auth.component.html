@@ -1,20 +1,20 @@
-<main
-  class="h-screen flex justify-center items-center bg-gradient-to-r from-sky-800 to-teal-500"
+<div
+  class="h-screen flex justify-center items-center "
 >
   <form
-    class="py-10 px-12 rounded-3xl bg-gradient-to-b from-gray-50 to-gray-200 w-2/5"
+    class="py-10 px-12  w-2/5"
     [formGroup]="form"
     #ngForm="ngForm"
     (submit)="onSave()"
   >
-    <h5 class="text-2xl text-center pb-10 text-gray-500">Log in</h5>
+    <h5 class="text-4xl leading-loose text-center pb-10 text-gray-500">Log in</h5>
     <p class="pb-5 text-sm text-red-500 capitalize" *ngIf="message">
       {{ message }}
     </p>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-8">
       <div class="flex flex-col gap-2">
         <label class="text-sm font-semibold text-gray-700">Email</label>
-        <div class="p-2 rounded-sm focus:outline-none bg-white text-gray-500">
+        <div class="p-3 rounded-lg focus:outline-none bg-white text-gray-500 border-[1px] border-teal-500">
           <input
             name="email"
             formControlName="email"
@@ -33,7 +33,7 @@
       <div class="flex flex-col gap-2">
         <label class="text-sm font-semibold text-gray-700">Password</label>
         <div
-          class="flex gap-1 justify-between items-center p-2 rounded-sm focus:outline-none bg-white text-gray-500"
+          class="flex gap-1 justify-between items-center p-3 rounded-lg focus:outline-none bg-white text-gray-500 border-[1px] border-teal-500"
         >
           <input
             formControlName="password"
@@ -65,7 +65,7 @@
         </p>
       </div>
       <button
-        class="self-start flex flex-col items-center py-1 px-4 rounded-3xl bg-gradient-to-r from-sky-700 to-green-400 text-white"
+        class="flex flex-col items-center justify-center px-4 py-2 rounded-lg bg-teal-500 text-white"
       >
         <span *ngIf="!loading">Log in</span>
         <mat-spinner
@@ -76,4 +76,7 @@
       </button>
     </div>
   </form>
-</main>
+</div>
+<!-- bg-gradient-to-r from-sky-800 to-teal-500 -->
+
+<!-- rounded-3xl bg-gradient-to-b from-gray-50 to-gray-200 -->

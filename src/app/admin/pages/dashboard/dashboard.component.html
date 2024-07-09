@@ -60,11 +60,11 @@
       
         <button *ngIf="element.filepath !== element.filename"
           (click)="download(element.filepath, element.filename)"
-          class="hover:text-teal-600"
+          class="hover:text-teal-500"
         >
           {{ element.filename }}
         </button>
-        <a class="hover:text-teal-600" *ngIf="element.filepath == element.filename" [href]="element.filepath" target="_blank"> {{ element.filename }}</a>
+        <a class="hover:text-teal-500" *ngIf="element.filepath == element.filename" [href]="element.filepath" target="_blank"> {{ element.filename }}</a>
       </td>
     </ng-container>
     <ng-container matColumnDef="created_at">

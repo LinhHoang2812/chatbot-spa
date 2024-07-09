@@ -17,6 +17,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ChatUISmallComponent } from './chat/pages/chat-uismall/chat-uismall.component';
 import {CdkMenuModule} from '@angular/cdk/menu';
 import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +27,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
     UploadFormComponent,
     BotComponent,
     ChatUISmallComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -38,6 +40,7 @@ import { MarkdownModule, MarkedOptions } from 'ngx-markdown';
     MatTableModule,
     NgxSpinnerModule,
     CdkMenuModule,
+    MatTooltipModule ,
     MarkdownModule.forRoot({markedOptions: {
       provide: MarkedOptions,
       useValue: {

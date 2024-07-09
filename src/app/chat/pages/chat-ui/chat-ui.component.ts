@@ -11,9 +11,12 @@ import { MarkdownService } from 'ngx-markdown';
 export class ChatUIComponent {
   @ViewChild('input') input: ElementRef;
   @ViewChild('chatUI') chatUI: ElementRef;
+  @ViewChild('sendButton') sendButton: ElementRef
   messages: Message[] = [];
   question: string;
   thinking: boolean = false;
+  isStreaming: boolean = false
+  shouldRegenerate: boolean = false
   reportList = ["Report A2A","Report Milano","Report Friuli Venenzia Giulia","Report Bergamo","Report Brescia","Report Valtellina Valchivenna","Report Monza Brianza","Report Puglia",
   "Report Sicilia","Report Piemonte","Report Calabria"]
   chosenTopic:string = "Report A2A"
@@ -27,30 +30,29 @@ export class ChatUIComponent {
   ngOnInit( ) {}
 
   ngAfterViewChecked() {
-    // if (this.messages.length !== this.lastMessagesLength) {
-    //   this.chatUI.nativeElement.scrollTop =
-    //     this.chatUI.nativeElement.scrollHeight;
-    //   this.lastMessagesLength = this.messages.length;
-    // }
-    this.chatUI.nativeElement.scrollTop =
-        this.chatUI.nativeElement.scrollHeight;
-    // if (this.messages.length !== this.lastMessagesLength) {
-    //   this.chatUI.nativeElement.scrollTop =
-    //     this.chatUI.nativeElement.scrollHeight;
-    //   this.lastMessagesLength = this.messages.length;
-    // }
+   
+    if (this.isStreaming){
+      this.chatUI.nativeElement.scrollTop = this.chatUI.nativeElement.scrollHeight;
+    
+    }
+    
     
   }
   streamChat(){
     this.thinking = true;
+    this.shouldRegenerate = false
+    this.isStreaming = true
     this.messages.push({
       role: 'user',
       content: this.question,
     });
     this.chatService
       .get_stream_response(this.question, this.messages, this.chosenTopic)
-      .subscribe((res:any) => {
+      .subscribe( {
+        next: (res:any)=>{
         this.thinking = false;
+        
+        
         if (this.messages[this.messages.length-1].role !== 'ai'){
           this.messages.push({
             role: 'ai',
@@ -60,24 +62,67 @@ export class ChatUIComponent {
         else{
           
           this.messages[this.messages.length-1].content +=   res
-          // console.log(res);
-          
-          //console.log(this.markdownService.parse(this.messages[this.messages.length-1].content))
-          
-          
-          
+        
         }
-       
-        
-       
-        
-        
-        
-      });
+        },
+        complete: () => {
+          //if abort is triggered it arrives here 
+          
+          this.isStreaming = false
+          this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
+
+        }
+
+         });
 
     this.question = null;
     this.input.nativeElement.style.height = 'auto';
   
+  }
+  stopChat(){
+    this.chatService.stop()
+    this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
+    this.thinking = false;
+    this.shouldRegenerate = true
+
+    
+  }
+  regenerateChat(){
+    this.sendButton.nativeElement.style.backgroundColor ='black'
+    this.isStreaming = true
+    this.shouldRegenerate = false
+    const questions = this.messages.filter(q=> q.role == "user")
+    const last_question = questions[questions.length -1 ]
+    this.thinking = true
+    if (this.messages[this.messages.length-1].role === 'ai'){
+      this.messages.pop()
+    }
+    this.chatService
+      .get_stream_response(last_question.content, this.messages, this.chosenTopic)
+      .subscribe( {
+        next: (res:any)=>{
+        this.thinking = false;
+        
+        if (this.messages[this.messages.length-1].role !== 'ai'){
+          this.messages.push({
+            role: 'ai',
+            content: res,
+          });
+        }
+        else{
+          
+          this.messages[this.messages.length-1].content +=   res
+        
+        }
+        },
+        complete: () => {
+          this.isStreaming = false
+          this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
+
+        }
+
+         });
+
   }
 
   sendChat() {
@@ -108,17 +153,28 @@ export class ChatUIComponent {
   onChange() {
     this.input.nativeElement.style.height = 'auto';
     this.input.nativeElement.style.height =
-      this.input.nativeElement.scrollHeight + 'px';
+    this.input.nativeElement.scrollHeight + 'px';
+    if (this.question !== ''){
+      this.sendButton.nativeElement.style.backgroundColor ='black'
+    }else{
+      this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
+    }
+   
+     
+    
   }
+  
   startNewChat(){
+  
+    
     this.messages = []
     this.thinking = false
-    this.question =null
+    this.question = null
+    this.chatService.stop()
+    this.isStreaming = false
+    this.shouldRegenerate = false
   }
 
-  handleStreamChunk(chunk: string) {
-    // Process the streamed chunk
-    console.log(chunk);
-   
-  }
+  
 }
+

@@ -4,7 +4,7 @@
   <div class="flex flex-col w-full h-full max-w-[1000px] bg-white pl-10">
     <div class="relative pt-2 pb-10 top-0 z-100 bg-white flex gap-4">
       <div class="px-2 py-1 rounded-lg flex items-center justify-center hover:bg-gray-100 cursor-pointer"
-      (click)="messages = []"
+      (click)="startNewChat()"
       >
         <span class="material-symbols-outlined icon">
           edit_square
@@ -23,21 +23,28 @@
         <div class="pb-10 flex flex-col gap-8">
           <div *ngFor="let message of messages" [ngClass]="message.role !== 'ai'? 'self-end ':'' ">
             <div class="flex gap-4 "  >
-              <img *ngIf="message.role === 'ai'" class="self-start"
+              <img *ngIf="message.role === 'ai' " class="self-start"
                 src="../../../../assets/AI_Avatar.png"
                 
               />
-              <!-- <div [ngClass]="message.role === 'ai'? 'w-full':'px-4 py-2 max-w-[25rem] rounded-2xl bg-gray-200'" [innerHTML]="markdownService.parse(message.content)">
-               
-              </div> -->
-              <markdown
-              [ngClass]="message.role === 'ai'? 'w-full':'px-4 py-2 max-w-[25rem] rounded-2xl bg-gray-200'"
-              class="prose-ol:list-decimal prose-ol:pl-5 prose-ul:list-disc prose-ul:my-2 prose-ul:pl-5 prose-li:pb-2 prose-p:my-1 prose-headings:text-lg prose-headings:leading-loose prose-headings:font-medium  prose-headings:my-2 "
-              [data]="message.content"
-              [disableSanitizer]="true"
-              ngPreserveWhitespaces
-              >
-            </markdown>
+              <div class="flex flex-col gap-2">
+                <markdown
+                [ngClass]="message.role === 'ai'? 'w-full':'px-4 py-2 max-w-[25rem] rounded-2xl bg-gray-200'"
+                class="prose-ol:list-decimal prose-ol:pl-5 prose-ul:list-disc prose-ul:my-2 prose-ul:pl-5 prose-li:pb-2 prose-p:my-1 prose-headings:text-lg prose-headings:leading-loose prose-headings:font-medium  prose-headings:my-2 "
+                [data]="message.content"
+                [disableSanitizer]="true"
+                >
+                </markdown>
+                <button class="self-start p-1 rounded-lg flex items-center justify-center hover:bg-gray-100 cursor-pointer"
+                matTooltip="Regenerate" (click)="regenerateChat()" >
+                  <span class="material-symbols-outlined icon" *ngIf="message.role === 'ai' && this.shouldRegenerate" >
+                    sync
+                  </span>
+                </button>
+                
+              
+              </div>
+              
             
             </div>
           </div>
@@ -51,6 +58,7 @@
               <div
                 class="w-40 h-10 rounded-xl shadow-sm shadow-gray-300 p-2 relative overflow-hidden"
               >
+              
                 <ngx-spinner
                   bdColor="rgba(255,255,255,0.1)"
                   [fullScreen]="false"
@@ -67,7 +75,7 @@
     </div>
     <form
       class="pb-10 md:pl-12 md:pr-20 pl-0 pr-10 flex gap-4 z-100 "
-      (submit)="streamChat()"
+      
     >
       <div class="w-full  flex items-center">
         <div
@@ -84,11 +92,12 @@
             placeholder="Message ESG chatbot..."
             class="resize-none border-none w-full px-6 py-4 min-h-14 max-h-40 h-auto focus:outline-none bg-gray-100"
           ></textarea>
-        <button type="submit"
+        <button type="submit" #sendButton
+          (click)="isStreaming? stopChat(): streamChat()"
           class="w-9 h-9 self-center flex items-center justify-center rounded-full bg-gray-300 border-[1px] border-gray-300  "
         >
         <span class="material-symbols-outlined send">
-          arrow_upward
+          {{isStreaming? 'stop':'arrow_upward'}}
           </span>
         </button>
         </div>

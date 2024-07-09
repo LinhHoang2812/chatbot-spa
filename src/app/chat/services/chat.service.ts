@@ -8,6 +8,7 @@ import { Message } from '../models';
 })
 export class ChatService {
   private stop$ = new Subject<void>();
+  private controller: AbortController;
   constructor(private http: HttpClient) {}
 
   get_response(
@@ -23,9 +24,15 @@ export class ChatService {
     });
   }
 
+  stop() {
+    if (this.controller) this.controller.abort();
+    this.stop$.next();
+  }
+
   get_stream_response( question: string,
     chat_history: Message[],
     topic:string){
+      this.controller = new AbortController();
       return new Observable(observer => {
         fetch(env.apiBase + 'response', {
               method: 'POST',
@@ -73,63 +80,7 @@ export class ChatService {
           .catch(error => {
             observer.error(error);
           });
-  
-        // return () => {
-        //   if (reader) {
-        //     reader.cancel();
-        //   }
-        // };
-      });
+      }).pipe(takeUntil(this.stop$));
     }
 
-    // return new Observable<string>(observer => {
-    //   fetch(env.apiBase + 'response', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       question,
-    //       topics:[topic],
-    //       chat_history,
-    
-    //     }),
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     }
-    //     //signal: this.controller.signal
-    //   }).then(response=>{
-    //     response.json()
-    //   }).then((data:any)=>{
-    //     observer.next(data);
-        
-    //   })
-    // })
-
-        // function push() {
-        //   return reader?.read().then(({ done, value }) => {
-        //     if (done) {
-        //       observer.complete();
-        //       return;
-        //     }
-        //     const string = decoder.decode(value);
-        //     const eventStr = string.split('\n\n');
-        //     let content = '';
-        //     for (let i = 0; i < eventStr.length; i++) {
-        //       const str = eventStr[i];
-        //       if (str === 'data: [DONE]') break;
-        //       if (str && str.slice(0, 6) === 'data: ') {
-        //         const jsonStr = str.slice(6);
-        //         const data: ChatStreamData = JSON.parse(jsonStr);
-        //         const thisContent = data.choices[0].delta?.content || '';
-        //         content += thisContent;
-        //       }
-        //     }
-        //     observer.next(content);
-        //     push();
-        //   });
-        // }
-       // push();
-  //     }).catch((err: Error) => {
-  //       observer.error(err?.message ?? 'there is an error');
-  //     });
-  //   }).pipe(takeUntil(this.stop$));
-  // }
 }
