@@ -39,45 +39,47 @@ export class ChatUIComponent {
     
   }
   streamChat(){
-    this.thinking = true;
-    this.shouldRegenerate = false
-    this.isStreaming = true
-    this.messages.push({
-      role: 'user',
-      content: this.question,
-    });
-    this.chatService
-      .get_stream_response(this.question, this.messages, this.chosenTopic)
-      .subscribe( {
-        next: (res:any)=>{
-        this.thinking = false;
-        
-        
-        if (this.messages[this.messages.length-1].role !== 'ai'){
-          this.messages.push({
-            role: 'ai',
-            content: res,
+      this.thinking = true;
+      this.shouldRegenerate = false
+      this.isStreaming = true
+      this.messages.push({
+        role: 'user',
+        content: this.question,
+      });
+
+      this.chatService
+        .get_stream_response(this.question, this.messages, this.chosenTopic)
+        .subscribe( {
+          next: (res:any)=>{
+          this.thinking = false;
+          
+          
+          if (this.messages[this.messages.length-1].role !== 'ai'){
+            this.messages.push({
+              role: 'ai',
+              content: res,
+            });
+          }
+          else{
+            
+            this.messages[this.messages.length-1].content +=   res
+          
+          }
+          },
+          complete: () => {
+            //if abort is triggered it arrives here 
+            
+            this.isStreaming = false
+            this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
+
+          }
+
           });
-        }
-        else{
-          
-          this.messages[this.messages.length-1].content +=   res
-        
-        }
-        },
-        complete: () => {
-          //if abort is triggered it arrives here 
-          
-          this.isStreaming = false
-          this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
 
-        }
+      this.question = null;
+      this.input.nativeElement.style.height = 'auto';
+    
 
-         });
-
-    this.question = null;
-    this.input.nativeElement.style.height = 'auto';
-  
   }
   stopChat(){
     this.chatService.stop()
@@ -174,6 +176,8 @@ export class ChatUIComponent {
     this.isStreaming = false
     this.shouldRegenerate = false
   }
+
+
 
   
 }

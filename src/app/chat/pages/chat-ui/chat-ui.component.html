@@ -83,7 +83,7 @@
         >
           <textarea
             #input
-            (keyup.enter)="streamChat()"
+            (keyup.enter)="!isStreaming && streamChat()"
             [(ngModel)]="question"
             name="input"
             id="input"
@@ -158,3 +158,4 @@
           ESG chatbot
         </p>
       </div> -->
+
