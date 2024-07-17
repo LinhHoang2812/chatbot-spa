@@ -3,6 +3,7 @@ import { Message } from '../../models';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ChatService } from '../../services/chat.service';
 import { MarkdownService } from 'ngx-markdown';
+import { concatMap, exhaustMap, switchMap, tap } from 'rxjs';
 @Component({
   selector: 'app-chat-ui',
   templateUrl: './chat-ui.component.html',
@@ -13,11 +14,13 @@ export class ChatUIComponent {
   @ViewChild('chatUI') chatUI: ElementRef;
   @ViewChild('sendButton') sendButton: ElementRef
   messages: Message[] = [];
+  chat_history :Message[]=[]
   question: string;
   thinking: boolean = false;
   isStreaming: boolean = false
   shouldRegenerate: boolean = false
-  reportList = ["Report A2A","Report Milano","Report Friuli Venenzia Giulia","Report Bergamo","Report Brescia","Report Valtellina Valchivenna","Report Monza Brianza","Report Puglia",
+  
+  reportList = ["Report A2A","Report Milano","Report Friuli Venezia Giulia","Report Bergamo","Report Brescia","Report Valtellina Valchivenna","Report Monza Brianza","Report Puglia",
   "Report Sicilia","Report Piemonte","Report Calabria"]
   chosenTopic:string = "Report A2A"
 
@@ -47,8 +50,13 @@ export class ChatUIComponent {
         content: this.question,
       });
 
+      this.chat_history.push({
+        role: 'user',
+        content: this.question,
+      });
+
       this.chatService
-        .get_stream_response(this.question, this.messages, this.chosenTopic)
+        .get_stream_response(this.question,this.chat_history)
         .subscribe( {
           next: (res:any)=>{
           this.thinking = false;
@@ -68,6 +76,18 @@ export class ChatUIComponent {
           },
           complete: () => {
             //if abort is triggered it arrives here 
+           
+            
+            
+            this.chatService.chat_summary(this.chat_history[this.chat_history.length-1].content,this.messages[this.messages.length-1].content).subscribe((summary:any)=>{
+              this.chat_history.push({
+                role: 'ai',
+                content: summary,
+              });
+              
+            })
+              
+            
             
             this.isStreaming = false
             this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
@@ -76,10 +96,20 @@ export class ChatUIComponent {
 
           });
 
+     
+      
       this.question = null;
+     
       this.input.nativeElement.style.height = 'auto';
     
 
+  }
+  get_stream_response(event: any){
+    if (!this.isStreaming){  
+      event.preventDefault();
+      this.streamChat()
+    } 
+    
   }
   stopChat(){
     this.chatService.stop()
@@ -93,14 +123,23 @@ export class ChatUIComponent {
     this.sendButton.nativeElement.style.backgroundColor ='black'
     this.isStreaming = true
     this.shouldRegenerate = false
+    this.thinking = true
+
     const questions = this.messages.filter(q=> q.role == "user")
     const last_question = questions[questions.length -1 ]
-    this.thinking = true
+    
     if (this.messages[this.messages.length-1].role === 'ai'){
       this.messages.pop()
+     
     }
+
+
+    if (this.chat_history[this.chat_history.length-1].role === 'ai'){
+       this.chat_history.pop()
+    }
+
     this.chatService
-      .get_stream_response(last_question.content, this.messages, this.chosenTopic)
+      .get_stream_response(last_question.content,[])
       .subscribe( {
         next: (res:any)=>{
         this.thinking = false;
@@ -118,8 +157,17 @@ export class ChatUIComponent {
         }
         },
         complete: () => {
+
+          this.chatService.chat_summary(this.chat_history[this.chat_history.length-1].content,this.messages[this.messages.length-1].content).subscribe((summary:any)=>{
+            this.chat_history.push({
+              role: 'ai',
+              content: summary,
+            });
+            
+          })
           this.isStreaming = false
           this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
+
 
         }
 
@@ -135,17 +183,23 @@ export class ChatUIComponent {
       content: this.question,
     });
 
-    this.chatService
-      .get_response(this.question, this.messages, this.chosenTopic)
-      .subscribe((res: { response: string }) => {
+    this.chatService.get_response(this.question).pipe(
+      switchMap((res: { response: string })=>{
         this.messages.push({
-          role: 'ai',
-          content: this.markdownService.parse(res.response),
-        });
+              role: 'ai',
+              content: this.markdownService.parse(res.response),
+            });
         this.thinking = false;
-        
-        
-      });
+            
+        return this.chatService.chat_summary(this.messages[this.messages.length-2].content,this.messages[this.messages.length-1].content)
+      })
+    ).subscribe((
+      res:string
+    )=>{
+      console.log(res);
+      
+    })
+      
 
     
     this.question = null;
@@ -170,6 +224,7 @@ export class ChatUIComponent {
   
     
     this.messages = []
+    this.chat_history = []
     this.thinking = false
     this.question = null
     this.chatService.stop()
@@ -181,4 +236,6 @@ export class ChatUIComponent {
 
   
 }
+
+
 

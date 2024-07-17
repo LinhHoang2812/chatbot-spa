@@ -10,12 +10,19 @@
           edit_square
           </span>
       </div>
-      <button [cdkMenuTriggerFor]="menu" class="px-2 py-1 rounded-lg flex items-center gap-1 justify-center hover:bg-gray-100 cursor-pointer">
+
+      <button  class="px-2 py-1 rounded-lg flex items-center gap-1 justify-center hover:bg-gray-100 cursor-pointer">
+        <span class="text-xl text-gray-500 leading-relaxed">ESG chatbot</span>
+        <!-- <span class="material-symbols-outlined icon">
+          keyboard_arrow_down
+          </span> -->
+      </button>
+      <!-- <button [cdkMenuTriggerFor]="menu" class="px-2 py-1 rounded-lg flex items-center gap-1 justify-center hover:bg-gray-100 cursor-pointer">
         <span class="text-xl text-gray-600 leading-relaxed">{{chosenTopic}}</span>
         <span class="material-symbols-outlined icon">
           keyboard_arrow_down
           </span>
-      </button>
+      </button> -->
       
     </div>
     <div class="flex-1 relative overflow-hidden">
@@ -83,7 +90,7 @@
         >
           <textarea
             #input
-            (keyup.enter)="!isStreaming && streamChat()"
+            (keydown.enter)="get_stream_response($event)"
             [(ngModel)]="question"
             name="input"
             id="input"
@@ -109,7 +116,7 @@
 </div>
 
 
-<ng-template #menu>
+<!-- <ng-template #menu>
   <div class="menu p-3 shadow-md shadow-gray-200 min-w-[23rem] rounded-md border-[1px] border-gray-300 flex flex-col h-60 overflow-y-auto bg-white" cdkMenu
   style="font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 20;"
   >
@@ -129,7 +136,10 @@
      
     </div>
 </div>
-</ng-template>
+</ng-template> -->
+
+
+
 
 <!-- bg-gradient-to-b from-sky-700 to-teal-400 bg-opacity-5 -->
 <!-- w-[calc(100%-5rem)] max-w-[calc(1200px-5rem)] -->

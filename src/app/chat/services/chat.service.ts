@@ -13,14 +13,9 @@ export class ChatService {
 
   get_response(
     question: string,
-    chat_history: Message[],
-    topic:string
   ): Observable<{ response: string }> {
-    return this.http.post<{ response: string }>(env.apiBase + 'response', {
+    return this.http.post<{ response: string }>(env.apiBase + 'response_non_stream', {
       question,
-      topics:[topic],
-      chat_history,
-
     });
   }
 
@@ -29,19 +24,17 @@ export class ChatService {
     this.stop$.next();
   }
 
-  get_stream_response( question: string,
-    chat_history: Message[],
-    topic:string){
+  chat_summary(question:string,response:string){
+      return this.http.post<string>(env.apiBase + 'chat_summary',{question,response})
+    }
+
+  get_stream_response( question: string,chats:Message[]){
       this.controller = new AbortController();
       return new Observable(observer => {
         fetch(env.apiBase + 'response', {
               method: 'POST',
               body: JSON.stringify({
-                question,
-                topics:[topic],
-                chat_history,
-          
-              }),
+                question,chats}),
               headers: {
                 'Content-Type': 'application/json',
               }

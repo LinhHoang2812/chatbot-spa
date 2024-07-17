@@ -21,7 +21,7 @@ export class UploadFormComponent {
   file: File
   form: FormGroup
   submitted: boolean = false
-  reportList = ["Report A2A","Report Milano","Report Friuli Venenzia Giulia","Report Bergamo","Report Brescia","Report Valtellina Valchivenna","Report Monza Brianza","Report Puglia",
+  reportList = ["Report A2A","Report Milano","Report Friuli Venezia Giulia","Report Bergamo","Report Brescia","Report Valtellina Valchiavenna","Report Monza Brianza","Report Puglia",
   "Report Sicilia","Report Piemonte","Report Calabria"]
 
   constructor(private documentService: DocumentsService) {}
@@ -30,7 +30,9 @@ export class UploadFormComponent {
     this.form = new FormGroup({
       title: new FormControl('',[Validators.required]),
       topic: new FormControl('',[Validators.required]),
-      file: new FormControl(null,[Validators.required])
+      file: new FormControl(null,[Validators.required]),
+      high_importance: new FormControl(null)
+
       
     })
   }
@@ -48,7 +50,13 @@ export class UploadFormComponent {
       this.loading = true;
       const formData = new FormData();
       Object.keys(this.form.value).forEach(key=>{
-        formData.append(key,this.form.get(key).value);
+        if (key === "high_importance"){
+          formData.append(key,this.form.get(key).value || false);
+        }
+        else{
+          formData.append(key,this.form.get(key).value);
+        }
+        
       })
       
       this.documentService.uploadDoc(formData).subscribe((res) => {
@@ -58,6 +66,8 @@ export class UploadFormComponent {
         this.submitted = false
        
     });
+
+
     }
     
   }
