@@ -28,7 +28,6 @@ export class UploadFormComponent {
 
   ngOnInit() {
     this.form = new FormGroup({
-      title: new FormControl('',[Validators.required]),
       topic: new FormControl('',[Validators.required]),
       file: new FormControl(null,[Validators.required]),
       high_importance: new FormControl(null)
