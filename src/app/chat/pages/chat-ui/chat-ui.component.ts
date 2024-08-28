@@ -18,13 +18,10 @@ export class ChatUIComponent {
   question: string;
   thinking: boolean = false;
   isStreaming: boolean = false
-  shouldRegenerate: boolean = false
-  
-  reportList = ["Report A2A","Report Milano","Report Friuli Venezia Giulia","Report Bergamo","Report Brescia","Report Valtellina Valchivenna","Report Monza Brianza","Report Puglia",
-  "Report Sicilia","Report Piemonte","Report Calabria"]
-  chosenTopic:string = "Report A2A"
 
-  private lastMessagesLength = 0;
+  editMessage: Message
+  
+  
   constructor(
     private spinner: NgxSpinnerService,
     private chatService: ChatService,
@@ -41,22 +38,22 @@ export class ChatUIComponent {
     
     
   }
-  streamChat(){
+  streamChat(question:string){
       this.thinking = true;
-      this.shouldRegenerate = false
+      
       this.isStreaming = true
       this.messages.push({
         role: 'user',
-        content: this.question,
+        content: question,
       });
 
       this.chat_history.push({
         role: 'user',
-        content: this.question,
+        content: question,
       });
 
       this.chatService
-        .get_stream_response(this.question,this.chat_history)
+        .get_stream_response(question,this.chat_history)
         .subscribe( {
           next: (res:any)=>{
           this.thinking = false;
@@ -104,10 +101,10 @@ export class ChatUIComponent {
     
 
   }
-  get_stream_response(event: any){
+  get_stream_response(event: any,question:string){
     if (!this.isStreaming){  
       event.preventDefault();
-      this.streamChat()
+      this.streamChat(question)
     } 
     
   }
@@ -115,14 +112,14 @@ export class ChatUIComponent {
     this.chatService.stop()
     this.sendButton.nativeElement.style.backgroundColor ='#d1d5db'
     this.thinking = false;
-    this.shouldRegenerate = true
+   
 
     
   }
   regenerateChat(){
     this.sendButton.nativeElement.style.backgroundColor ='black'
     this.isStreaming = true
-    this.shouldRegenerate = false
+  
     this.thinking = true
 
     const questions = this.messages.filter(q=> q.role == "user")
@@ -139,7 +136,7 @@ export class ChatUIComponent {
     }
 
     this.chatService
-      .get_stream_response(last_question.content,[])
+      .get_stream_response(last_question.content,this.chat_history)
       .subscribe( {
         next: (res:any)=>{
         this.thinking = false;
@@ -173,6 +170,24 @@ export class ChatUIComponent {
 
          });
 
+  }
+  generate_editQuestionChat(){
+    if (this.messages[this.messages.length-1].role === 'ai'){
+      this.messages.pop()
+      this.messages.pop()
+     
+    }
+   
+    //remove 2 last history
+    if (this.chat_history[this.chat_history.length-1].role === 'ai'){
+      this.chat_history.pop()
+      this.chat_history.pop()
+   }
+    //append edit question
+    //generate new answer for edit question
+    // this.question = this.editMessage.content
+    this.streamChat(this.editMessage.content)
+    this.editMessage = null
   }
 
   sendChat() {
@@ -229,7 +244,7 @@ export class ChatUIComponent {
     this.question = null
     this.chatService.stop()
     this.isStreaming = false
-    this.shouldRegenerate = false
+   
   }
 
 
